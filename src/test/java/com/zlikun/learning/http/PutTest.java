@@ -14,11 +14,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class PutTest {
 
-    private String elastic_uri_prefix = "http://docker.zlikun.com:9200/" ;
+    private String elastic_uri_prefix = "http://es.zlikun.com:9200/";
 
     private OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(3 , TimeUnit.SECONDS)
-            .build() ;
+            .connectTimeout(3, TimeUnit.SECONDS)
+            .build();
 
     /**
      * 创建一个用户(文档)，在DevTools使用`GET /user/hero/1`请求查看创建的文档信息
@@ -33,18 +33,17 @@ public class PutTest {
                 // 1 表示ID
                 .url(elastic_uri_prefix + "user/hero/1?pretty")
                 .put(RequestBody.create(MediaType.parse("application/json")
-                        ,"{\"name\":\"小乔\",\"age\":21,\"gender\":\"FEMALE\",\"about\":\"小乔要努力变强\"}"))
-                .build() ;
+                        , "{\"name\":\"小乔\",\"age\":21,\"gender\":\"FEMALE\",\"about\":\"小乔要努力变强\"}"))
+                .build();
 
         // 执行请求，好吧，是个馊主意，这TM是个异步请求
         client.newCall(request).enqueue(new Callback() {
-            @Override
             public void onFailure(Call call, IOException e) {
-                log.error("哟 ,出错了!" ,e);
+                log.error("哟 ,出错了!", e);
             }
-            @Override
+
             public void onResponse(Call call, Response response) throws IOException {
-                log.info("{}" ,response.body().string());
+                log.info("{}", response.body().string());
                 response.close();
             }
         });
